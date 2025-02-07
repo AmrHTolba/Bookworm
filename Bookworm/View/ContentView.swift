@@ -5,17 +5,33 @@
 //  Created by Amr El-Fiqi on 07/02/2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct ContentView: View {
+    
+    // MARK: - Properties
+    @Query var books: [Book]
+    @Environment(\.modelContext) var modelContext
+    
+    @State private var showingAddScreen = false
+    
+    // MARK: - Body
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            Text("Count \(books.count)")
+                .navigationTitle("Bookworm")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Add Book", systemImage: "plus") {
+                            showingAddScreen.toggle()
+                        }
+                    }
+                }
         }
-        .padding()
+        .sheet(isPresented: $showingAddScreen) {
+            AddBookView()
+        }
     }
 }
 
