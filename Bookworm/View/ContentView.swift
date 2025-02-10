@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
     
     // MARK: - Properties
-    @Query var books: [Book]
+    @Query(sort: [SortDescriptor(\Book.title), SortDescriptor(\Book.author)]) var books: [Book]
     @Environment(\.modelContext) var modelContext
     
     @State private var showingAddScreen = false
@@ -25,6 +25,7 @@ struct ContentView: View {
                         HStack(alignment: .top) {
                             EmojiRatingView(rating: book.rating)
                                 .font(.largeTitle)
+                                .frame(width: 50, height: 50)
                             
                             VStack(alignment: .leading) {
                                 Text(book.title)
@@ -47,6 +48,9 @@ struct ContentView: View {
                     Button("Add Book", systemImage: "plus") {
                         showingAddScreen.toggle()
                     }
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
                 }
             }
         }
