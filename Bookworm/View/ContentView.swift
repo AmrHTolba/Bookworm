@@ -21,7 +21,7 @@ struct ContentView: View {
         NavigationStack {
             List {
                 ForEach(books) { book in
-                    NavigationLink(value: book) { // ✅ Using value: book
+                    NavigationLink(value: book) {
                         HStack(alignment: .top) {
                             EmojiRatingView(rating: book.rating)
                                 .font(.largeTitle)
@@ -35,11 +35,11 @@ struct ContentView: View {
                         }
                     }
                 }
-                .onDelete(perform: deleteBook) // ✅ Enable swipe-to-delete
+                .onDelete(perform: deleteBook)
                 
             }
             .navigationDestination(for: Book.self) { book in
-                DetailView(book: book) // ✅ Now it's properly linked
+                DetailView(book: book)
             }
             .navigationTitle("Bookworm")
             .toolbar {
