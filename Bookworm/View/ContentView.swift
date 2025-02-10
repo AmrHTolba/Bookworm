@@ -9,6 +9,9 @@ import SwiftData
 import SwiftUI
 
 struct ContentView: View {
+    init() {
+     UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor.purple]
+   }
     
     // MARK: - Properties
     @Query(sort: [SortDescriptor(\Book.title), SortDescriptor(\Book.author)]) var books: [Book]
@@ -40,29 +43,26 @@ struct ContentView: View {
                         }
                     }
                     .onDelete(perform: deleteBook)
-                    
                 }
-                .scrollContentBackground(.hidden) // Hides default list background
-                .background(Color.clear)
                 .navigationDestination(for: Book.self) { book in
                     DetailView(book: book)
                 }
-                .navigationTitle("Bookworm")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Add Book", systemImage: "plus") {
-                            showingAddScreen.toggle()
-                        }
+            }
+            .navigationTitle("Bookworm")
+            .scrollContentBackground(.hidden)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Add Book", systemImage: "plus") {
+                        showingAddScreen.toggle()
                     }
-                    ToolbarItem(placement: .topBarLeading) {
-                        EditButton()
-                    }
+                    
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    EditButton()
                 }
             }
         }
-        .sheet(isPresented: $showingAddScreen) {
-            AddBookView()
-        }
+        .foregroundStyle(.purple)
         .sheet(isPresented: $showingAddScreen) {
             AddBookView()
         }
