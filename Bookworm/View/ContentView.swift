@@ -19,38 +19,44 @@ struct ContentView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(books) { book in
-                    NavigationLink(value: book) {
-                        HStack(alignment: .top) {
-                            EmojiRatingView(rating: book.rating)
-                                .font(.largeTitle)
-                                .frame(width: 50, height: 50)
-                            
-                            VStack(alignment: .leading) {
-                                Text(book.title)
-                                    .font(.headline)
-                                Text(book.author)
-                                    .foregroundStyle(.secondary)
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Color.black, Color.purple.opacity(0.8), Color.blue.opacity(0.6)]),startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .ignoresSafeArea()
+                List {
+                    ForEach(books) { book in
+                        NavigationLink(value: book) {
+                            HStack(alignment: .top) {
+                                EmojiRatingView(rating: book.rating)
+                                    .font(.largeTitle)
+                                    .frame(width: 50, height: 50)
+                                
+                                VStack(alignment: .leading) {
+                                    Text(book.title)
+                                        .font(.headline)
+                                    Text(book.author)
+                                        .foregroundStyle(.secondary)
+                                }
                             }
                         }
                     }
+                    .onDelete(perform: deleteBook)
+                    
                 }
-                .onDelete(perform: deleteBook)
-                
-            }
-            .navigationDestination(for: Book.self) { book in
-                DetailView(book: book)
-            }
-            .navigationTitle("Bookworm")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add Book", systemImage: "plus") {
-                        showingAddScreen.toggle()
+                .scrollContentBackground(.hidden) // Hides default list background
+                .background(Color.clear)
+                .navigationDestination(for: Book.self) { book in
+                    DetailView(book: book)
+                }
+                .navigationTitle("Bookworm")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Add Book", systemImage: "plus") {
+                            showingAddScreen.toggle()
+                        }
                     }
-                }
-                ToolbarItem(placement: .topBarLeading) {
-                    EditButton()
+                    ToolbarItem(placement: .topBarLeading) {
+                        EditButton()
+                    }
                 }
             }
         }

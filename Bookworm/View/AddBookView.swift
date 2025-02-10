@@ -24,31 +24,42 @@ struct AddBookView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    TextField("Title", text: $title)
-                    TextField("Author", text: $author)
+            ZStack {
+                LinearGradient(gradient: Gradient(colors: [Color.black, Color.purple.opacity(0.8), Color.blue.opacity(0.6)]),startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea()
+                
+                Form {
+                    Section {
+                        TextField("Title", text: $title)
+                            .submitLabel(.next)
+                        TextField("Author", text: $author)
+                            .submitLabel(.done)
+                            .onSubmit {
+                                hideKeyboard()
+                            }
+                        Picker("Genre", selection: $genre) {
+                            ForEach(genres, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                    }
                     
-                    Picker("Genre", selection: $genre) {
-                        ForEach(genres, id: \.self) {
-                            Text($0)
+                    Section("Write a review") {
+                        TextEditor(text: $review)
+                            .submitLabel(.done)
+                            .onSubmit { hideKeyboard()}
+                        RatingView(rating: $rating)
+                    }
+                    
+                    Section {
+                        Button("Save") {
+                            let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating)
+                            modelContext.insert(newBook)
+                            dismiss()
                         }
                     }
                 }
-                
-                Section("Write a review") {
-                    TextEditor(text: $review)
-                    
-                    RatingView(rating: $rating)
-                }
-                
-                Section {
-                    Button("Save") {
-                        let newBook = Book(title: title, author: author, genre: genre, review: review, rating: rating)
-                        modelContext.insert(newBook)
-                        dismiss()
-                    }
-                }
+                .scrollContentBackground(.hidden)
             }
             .navigationTitle("Add Book")
         }
@@ -57,4 +68,12 @@ struct AddBookView: View {
 
 #Preview {
     AddBookView()
+}
+
+
+// MARK: - Extension
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
