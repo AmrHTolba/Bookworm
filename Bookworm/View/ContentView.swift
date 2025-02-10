@@ -21,32 +21,47 @@ struct ContentView: View {
         NavigationStack {
             List {
                 ForEach(books) { book in
-                    NavigationLink(value: book) {
-                        HStack {
+                    NavigationLink(value: book) { // ✅ Using value: book
+                        HStack(alignment: .top) {
                             EmojiRatingView(rating: book.rating)
                                 .font(.largeTitle)
-                            VStack {
-                                Text("Title: \(book.title)")
+                            
+                            VStack(alignment: .leading) {
+                                Text(book.title)
                                     .font(.headline)
-                                Text("Authoer: \(book.author)")
+                                Text(book.author)
                                     .foregroundStyle(.secondary)
                             }
                         }
                     }
-                    
                 }
+                .onDelete(perform: deleteBook) // ✅ Enable swipe-to-delete
+                
             }
-                .navigationTitle("Bookworm")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Add Book", systemImage: "plus") {
-                            showingAddScreen.toggle()
-                        }
+            .navigationDestination(for: Book.self) { book in
+                DetailView(book: book) // ✅ Now it's properly linked
+            }
+            .navigationTitle("Bookworm")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Add Book", systemImage: "plus") {
+                        showingAddScreen.toggle()
                     }
                 }
+            }
         }
         .sheet(isPresented: $showingAddScreen) {
             AddBookView()
+        }
+        .sheet(isPresented: $showingAddScreen) {
+            AddBookView()
+        }
+    }
+    
+    func deleteBook(at offsets: IndexSet) {
+        for index in offsets {
+            let book = books[index]
+            modelContext.delete(book) // Delete from SwiftData
         }
     }
 }

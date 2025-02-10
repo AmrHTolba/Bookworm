@@ -18,7 +18,7 @@ struct EmojiRatingView: View {
             Text("👍")
         case 3:
             Text("🌸 ")
-            case 4:
+        case 4:
             Text("🦋")
         default:
             Text("🫰")
