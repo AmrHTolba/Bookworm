@@ -19,7 +19,23 @@ struct ContentView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            Text("Count \(books.count)")
+            List {
+                ForEach(books) { book in
+                    NavigationLink(value: book) {
+                        HStack {
+                            EmojiRatingView(rating: book.rating)
+                                .font(.largeTitle)
+                            VStack {
+                                Text("Title: \(book.title)")
+                                    .font(.headline)
+                                Text("Authoer: \(book.author)")
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    
+                }
+            }
                 .navigationTitle("Bookworm")
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
